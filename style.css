@@ -1,47 +1,81 @@
+/* GLOBAL */
 body {
-margin: 0;
-font-family: Arial, sans-serif;
-background: #000;
-color: #fff;
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  color: #eaeaea;
+  background: #000;
 }
 
+/* HERO BACKGROUND – KNIGHTSHADE STYLE */
 .hero {
-min-height: 100vh;
-padding: 60px 40px;
-background-image: url("landing.png");
-background-size: cover;
-background-position: center;
+  min-height: 100vh;
+  padding: 80px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  /* KnightShade coded background */
+  background:
+    radial-gradient(circle at top left, rgba(90, 0, 120, 0.35), transparent 60%),
+    radial-gradient(circle at bottom right, rgba(0, 120, 90, 0.25), transparent 60%),
+    linear-gradient(180deg, #050505, #000);
 }
 
+/* TEXT */
 h1 {
-font-size: 3rem;
-margin-bottom: 10px;
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.accent {
+  color: #9b5cff;
 }
 
 .tagline {
-max-width: 500px;
-margin-bottom: 30px;
-color: #ccc;
+  max-width: 520px;
+  color: #bdbdbd;
+  margin-bottom: 35px;
+  line-height: 1.6;
 }
 
+/* BUTTONS */
 .buttons a {
-display: inline-block;
-margin-right: 15px;
-text-decoration: none;
-color: #fff;
+  display: inline-block;
+  margin-right: 16px;
+  text-decoration: none;
+  font-weight: 500;
 }
 
 .btn {
-padding: 12px 20px;
-border: 1px solid #fff;
+  padding: 12px 22px;
+  border: 1px solid #9b5cff;
+  color: #fff;
+  background: rgba(155, 92, 255, 0.15);
+  backdrop-filter: blur(4px);
+}
+
+.btn:hover {
+  background: rgba(155, 92, 255, 0.3);
 }
 
 .btn.outline {
-border-color: #aaa;
-color: #aaa;
+  border-color: #666;
+  color: #ccc;
+  background: transparent;
 }
 
+/* ABOUT SECTION */
 #about {
-padding: 60px 40px;
-background: #111;
+  padding: 70px 40px;
+  background: #0a0a0a;
+}
+
+#about h2 {
+  margin-bottom: 15px;
+}
+
+#about p {
+  max-width: 600px;
+  color: #bdbdbd;
+  line-height: 1.7;
 }
