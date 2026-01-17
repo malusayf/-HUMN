@@ -14,11 +14,12 @@ body {
   flex-direction: column;
   justify-content: center;
 
-  /* KnightShade coded background */
   background:
-    radial-gradient(circle at top left, rgba(90, 0, 120, 0.35), transparent 60%),
-    radial-gradient(circle at bottom right, rgba(0, 120, 90, 0.25), transparent 60%),
-    linear-gradient(180deg, #050505, #000);
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)),
+    url("landing.png");
+
+  background-size: cover;
+  background-position: center;
 }
 
 /* TEXT */
