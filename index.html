@@ -1,25 +1,138 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>$HUMN</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #eaeaea;
+    }
+
+    .hero {
+      min-height: 100vh;
+      padding: 80px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+
+      background:
+        radial-gradient(circle at 15% 20%, rgba(155,92,255,0.35), transparent 55%),
+        radial-gradient(circle at 85% 65%, rgba(0,140,120,0.25), transparent 55%),
+        linear-gradient(180deg, #020202, #000);
+
+      animation: fadeIn 1.4s ease-out forwards;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* PARTICLES */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particles span {
+      position: absolute;
+      bottom: -120px;
+      width: 6px;
+      height: 6px;
+      background: rgba(155,92,255,0.8);
+      border-radius: 50%;
+      animation: floatUp linear infinite;
+      filter: blur(1px);
+    }
+
+    .particles span:nth-child(1) { left: 10%; animation-duration: 12s; }
+    .particles span:nth-child(2) { left: 25%; animation-duration: 18s; width: 4px; height: 4px; }
+    .particles span:nth-child(3) { left: 45%; animation-duration: 15s; }
+    .particles span:nth-child(4) { left: 65%; animation-duration: 20s; width: 3px; height: 3px; }
+    .particles span:nth-child(5) { left: 80%; animation-duration: 16s; }
+    .particles span:nth-child(6) { left: 90%; animation-duration: 22s; width: 5px; height: 5px; }
+
+    @keyframes floatUp {
+      from { transform: translateY(0); opacity: 0; }
+      10% { opacity: 0.6; }
+      to { transform: translateY(-120vh); opacity: 0; }
+    }
+
+    h1, p, .buttons {
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    .accent {
+      color: #9b5cff;
+      animation: glow 3s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%,100% { text-shadow: 0 0 8px rgba(155,92,255,0.4); }
+      50% { text-shadow: 0 0 20px rgba(155,92,255,0.9); }
+    }
+
+    .tagline {
+      max-width: 520px;
+      color: #bdbdbd;
+      margin-bottom: 35px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      padding: 12px 22px;
+      border: 1px solid #9b5cff;
+      color: #fff;
+      background: rgba(155,92,255,0.15);
+      text-decoration: none;
+      margin-right: 15px;
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(155,92,255,0.35);
+    }
+
+    .btn.outline {
+      border-color: #666;
+      color: #ccc;
+      background: transparent;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
+
 <body>
 
-  <!-- HERO / LANDING -->
   <div class="hero">
 
-    <!-- Floating Particles -->
     <div class="particles">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
     </div>
 
     <h1>Welcome to <span class="accent">$HUMN</span></h1>
@@ -30,10 +143,13 @@
 
     <div class="buttons">
       <a href="#about" class="btn">What is $HUMN?</a>
-      <a href="https://x.com/knightshadeops?s=21" target="_blank" class="btn outline">
-        Follow on X
-      </a>
+      <a href="https://x.com/knightshadeops?s=21" target="_blank" class="btn outline">Follow on X</a>
     </div>
+
+  </div>
+
+</body>
+</html>
   </div>
 
   <!-- INFO SECTION -->
