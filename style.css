@@ -20,9 +20,11 @@ body {
     radial-gradient(circle at 15% 20%, rgba(155, 92, 255, 0.35), transparent 55%),
     radial-gradient(circle at 85% 65%, rgba(0, 140, 120, 0.25), transparent 55%),
     linear-gradient(180deg, #020202, #000);
+
+  animation: fadeIn 1.4s ease-out forwards;
 }
 
-/* SUBTLE DEPTH OVERLAY */
+/* DEPTH OVERLAY */
 .hero::after {
   content: "";
   position: absolute;
@@ -33,6 +35,56 @@ body {
     transparent 60%
   );
   pointer-events: none;
+  z-index: 0;
+}
+
+/* FLOATING PARTICLES */
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particles span {
+  position: absolute;
+  bottom: -120px;
+  width: 6px;
+  height: 6px;
+  background: rgba(155, 92, 255, 0.6);
+  border-radius: 50%;
+  animation: floatUp 14s linear infinite;
+  filter: blur(1px);
+}
+
+.particles span:nth-child(1) { left: 10%; animation-duration: 12s; }
+.particles span:nth-child(2) { left: 25%; animation-duration: 18s; width: 4px; height: 4px; }
+.particles span:nth-child(3) { left: 45%; animation-duration: 15s; }
+.particles span:nth-child(4) { left: 65%; animation-duration: 20s; width: 3px; height: 3px; }
+.particles span:nth-child(5) { left: 80%; animation-duration: 16s; }
+.particles span:nth-child(6) { left: 90%; animation-duration: 22s; width: 5px; height: 5px; }
+
+@keyframes floatUp {
+  from {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+}
+
+/* TEXT LAYER */
+.hero h1,
+.hero p,
+.hero .buttons {
+  position: relative;
+  z-index: 2;
 }
 
 /* TEXT */
@@ -43,6 +95,16 @@ h1 {
 
 .accent {
   color: #9b5cff;
+  animation: glow 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 8px rgba(155, 92, 255, 0.4);
+  }
+  50% {
+    text-shadow: 0 0 18px rgba(155, 92, 255, 0.85);
+  }
 }
 
 .tagline {
@@ -66,10 +128,12 @@ h1 {
   color: #fff;
   background: rgba(155, 92, 255, 0.15);
   backdrop-filter: blur(4px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .btn:hover {
-  background: rgba(155, 92, 255, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(155, 92, 255, 0.25);
 }
 
 .btn.outline {
@@ -93,86 +157,3 @@ h1 {
   color: #bdbdbd;
   line-height: 1.7;
 }
-/* ANIMATIONS */
-
-/* Page fade-in */
-.hero {
-  animation: fadeIn 1.4s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* HUMN glow pulse */
-.accent {
-  animation: glow 3s ease-in-out infinite;
-}
-
-@keyframes glow {
-  0%, 100% {
-    text-shadow: 0 0 8px rgba(155, 92, 255, 0.4);
-  }
-  50% {
-    text-shadow: 0 0 18px rgba(155, 92, 255, 0.85);
-  }
-}
-
-/* Button hover lift */
-.btn {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(155, 92, 255, 0.25);
-}
-/* FLOATING PARTICLES */
-
-.particles {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.particles span {
-  position: absolute;
-  bottom: -120px;
-  width: 6px;
-  height: 6px;
-  background: rgba(155, 92, 255, 0.35);
-  border-radius: 50%;
-  animation: floatUp 14s linear infinite;
-  filter: blur(1px);
-}
-
-/* Each particle different */
-.particles span:nth-child(1) { left: 10%; animation-duration: 12s; }
-.particles span:nth-child(2) { left: 25%; animation-duration: 18s; width: 4px; height: 4px; }
-.particles span:nth-child(3) { left: 45%; animation-duration: 15s; }
-.particles span:nth-child(4) { left: 65%; animation-duration: 20s; width: 3px; height: 3px; }
-.particles span:nth-child(5) { left: 80%; animation-duration: 16s; }
-.particles span:nth-child(6) { left: 90%; animation-duration: 22s; width: 5px; height: 5px; }
-
-@keyframes floatUp {
-  from {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.4;
-  }
-  to {
-    transform: translateY(-120vh);
-    opacity: 0;
-  }
-}
-
