@@ -1,302 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>$HUMN — Human Lore</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$HUMN — Human Lore</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at top, #1a1026, #050008);
-      color: #ffffff;
-      overflow-x: hidden;
-    }
+/* ===== BODY ===== */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background:
+    radial-gradient(circle at 20% 10%, #2b0f3f, transparent 40%),
+    radial-gradient(circle at 80% 90%, #0a3a2a, transparent 40%),
+    linear-gradient(180deg, #050008, #020005);
+  color: #ffffff;
+  overflow-x: hidden;
+}
 
-    /* === PARTICLES === */
-    .particles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
+/* ===== FLOATING GRID ===== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
 
-    .particle {
-      position: absolute;
-      width: 3px;
-      height: 3px;
-      background: rgba(155, 92, 255, 0.6);
-      border-radius: 50%;
-      animation: floatUp linear infinite;
-    }
+/* ===== PARTICLES ===== */
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
 
-    @keyframes floatUp {
-      from {
-        transform: translateY(110vh);
-        opacity: 0;
-      }
-      10% { opacity: 1; }
-      to {
-        transform: translateY(-10vh);
-        opacity: 0;
-      }
-    }
-
-    /* === HERO === */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 2rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      letter-spacing: 0.08em;
-      margin-bottom: 1rem;
-    }
-
-    .hero p {
-      max-width: 640px;
-      font-size: 1.1rem;
-      opacity: 0.85;
-      margin-bottom: 2.5rem;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border-radius: 999px;
-      border: 1px solid rgba(155, 92, 255, 0.6);
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.25s ease;
-    }
-
-    .btn.primary {
-      background: rgba(155, 92, 255, 0.25);
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 18px rgba(155, 92, 255, 0.45);
-    }
-
-    /* === INFO SECTION === */
-    .section {
-      padding: 5rem 1.5rem;
-      max-width: 900px;
-      margin: auto;
-      position: relative;
-      z-index: 2;
-    }
-
-    .section h2 {
-      font-size: 2rem;
-      margin-bottom: 1.25rem;
-      text-align: center;
-    }
-
-    .section p {
-      font-size: 1.05rem;
-      line-height: 1.7;
-      opacity: 0.85;
-      text-align: center;
-    }
-
-    /* === FOOTER === */
-    footer {
-      padding: 2rem;
-      text-align: center;
-      font-size: 0.85rem;
-      opacity: 0.4;
-      position: relative;
-      z-index: 2;
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- PARTICLES -->
-  <div class="particles" id="particles"></div>
-
-  <!-- HERO -->
-  <section class="hero">
-    <h1>Welcome to $HUMN</h1>
-    <p>
-      A digital artifact exploring identity, signal, and survival in a post-noise world.
-      No promises. No shortcuts. Just lore.
-    </p>
-
-    <div class="buttons">
-      <a href="#about" class="btn primary">What is $HUMN?</a>
-      <a href="https://x.com/knightshadeops?s=21" target="_blank" class="btn">
-        Follow on X
-      </a>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="section" id="about">
-    <h2>What is $HUMN?</h2>
-    <p>
-      $HUMN is a symbolic construct — a narrative token representing human agency
-      in an increasingly automated world. It exists at the intersection of culture,
-      technology, and self-sovereignty.
-      <br><br>
-      This site is the entry point. The rest unfolds in public.
-    </p>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    © HUMAN LORE — Signal over noise.
-  </footer>
-
-  <!-- PARTICLE SCRIPT -->
-  <script>
-    const container = document.getElementById('particles');
-    const count = 45;
-
-    for (let i = 0; i < count; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.style.left = Math.random() * 100 + 'vw';
-      p.style.animationDuration = 12 + Math.random() * 18 + 's';
-      p.style.animationDelay = Math.random() * 10 + 's';
-      container.appendChild(p);
-    }
-  </script>
-
-</body>
-</html>
-  width: 5px;
-  height: 5px;
-  background: rgba(155, 92, 255, 0.8);
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(155, 92, 255, 0.7);
   border-radius: 50%;
-  animation: rise linear infinite;
-  filter: blur(1px);
+  animation: floatUp linear infinite;
 }
 
-@keyframes rise {
-  from { transform: translateY(0); opacity: 0; }
-  10% { opacity: 0.6; }
-  to { transform: translateY(-120vh); opacity: 0; }
+@keyframes floatUp {
+  from { transform: translateY(110vh); opacity: 0; }
+  10% { opacity: 1; }
+  to { transform: translateY(-10vh); opacity: 0; }
 }
 
-.particles span:nth-child(1){ left:10%; animation-duration:14s; }
-.particles span:nth-child(2){ left:25%; animation-duration:20s; width:3px; height:3px;}
-.particles span:nth-child(3){ left:45%; animation-duration:17s;}
-.particles span:nth-child(4){ left:65%; animation-duration:22s; width:4px; height:4px;}
-.particles span:nth-child(5){ left:80%; animation-duration:19s;}
-.particles span:nth-child(6){ left:90%; animation-duration:24s; width:3px; height:3px;}
-
-/* CONTENT */
-.container {
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
   position: relative;
   z-index: 2;
-  min-height: 100vh;
-  padding: 80px 20px;
-  max-width: 900px;
-  margin: auto;
 }
 
-h1 {
-  font-size: 3rem;
-  margin-bottom: 20px;
+.hero h1 {
+  font-size: clamp(2.8rem, 7vw, 4.5rem);
+  letter-spacing: 0.12em;
+  margin-bottom: 1rem;
 }
 
-.accent {
-  color: #9b5cff;
-  text-shadow: 0 0 12px rgba(155,92,255,.6);
+.hero p {
+  max-width: 680px;
+  opacity: 0.85;
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
 }
 
-.tagline {
-  max-width: 520px;
-  line-height: 1.6;
-  color: #d0d0d0;
-  margin-bottom: 40px;
+/* ===== COIN SVG ===== */
+.coin {
+  width: 140px;
+  margin-bottom: 2rem;
+  filter: drop-shadow(0 0 20px rgba(155,92,255,0.6));
+  animation: slowSpin 18s linear infinite;
 }
 
-.buttons a {
-  display: inline-block;
-  padding: 12px 24px;
-  margin-right: 12px;
-  border: 1px solid #9b5cff;
-  color: #fff;
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ===== BUTTONS ===== */
+.buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.75rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(155,92,255,0.6);
   text-decoration: none;
-  background: rgba(155,92,255,.15);
-  transition: transform .25s, box-shadow .25s;
+  color: white;
+  transition: all 0.25s ease;
 }
 
-.buttons a:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(155,92,255,.4);
+.btn.primary {
+  background: rgba(155,92,255,0.25);
 }
 
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(155,92,255,0.5);
+}
+
+/* ===== SECTIONS ===== */
 .section {
-  margin-top: 140px;
+  padding: 5rem 1.5rem;
+  max-width: 1000px;
+  margin: auto;
+  position: relative;
+  z-index: 2;
+  text-align: center;
 }
 
-@media (max-width: 600px) {
-  h1 { font-size: 2.3rem; }
-  .buttons a {
-    display: block;
-    margin-bottom: 15px;
-    width: fit-content;
-  }
+.section h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1.2rem;
+}
+
+.section p {
+  opacity: 0.85;
+  line-height: 1.7;
+  font-size: 1.05rem;
+}
+
+/* ===== METRICS ===== */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.metric {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.03);
+}
+
+.metric h3 {
+  font-size: 1.8rem;
+  color: #9b5cff;
+}
+
+.metric span {
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+/* ===== WHITEPAPER ===== */
+.whitepaper {
+  margin-top: 3rem;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 2rem;
+  text-align: center;
+  opacity: 0.4;
+  font-size: 0.85rem;
+  position: relative;
+  z-index: 2;
 }
 </style>
 </head>
 
 <body>
 
-<!-- PARTICLES -->
-<div class="particles">
-  <span></span><span></span><span></span>
-  <span></span><span></span><span></span>
-</div>
+<div class="particles" id="particles"></div>
 
-<!-- CONTENT -->
-<div class="container">
-  <h1>Welcome to <span class="accent">$HUMN</span></h1>
+<section class="hero">
+  <!-- SVG COIN -->
+  <svg class="coin" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#9b5cff" stroke-width="6"/>
+    <text x="50%" y="54%" text-anchor="middle" font-size="52" fill="#9b5cff" font-weight="700">$H</text>
+  </svg>
 
-  <p class="tagline">
-    A living archive of human truth, memory, and meaning.
+  <h1>WELCOME TO $HUMN</h1>
+  <p>
+    A knightshade-born memetic artifact exploring identity, autonomy,
+    and signal in a post-human economy.
   </p>
 
   <div class="buttons">
-    <a href="#about">What is $HUMN?</a>
-    <a href="https://x.com/knightshadeops?s=21" target="_blank">Follow on X</a>
+    <a href="#about" class="btn primary">What is $HUMN?</a>
+    <a href="#paper" class="btn">Read the Human Paper</a>
+    <a href="https://x.com/knightshadeops?s=21" target="_blank" class="btn">Follow on X</a>
   </div>
+</section>
 
-  <div id="about" class="section">
-    <h2>What is $HUMN?</h2>
-    <p class="tagline">
-      $HUMN is a digital archive preserving stories, ideas, and fragments of meaning
-      that define what it means to be human.
-    </p>
+<section class="section" id="about">
+  <h2>What is $HUMN?</h2>
+  <p>
+    $HUMN is a cultural symbol disguised as a coin.
+    It represents resistance to automation without agency,
+    and the preservation of human decision-making in digital systems.
+  </p>
+
+  <div class="metrics">
+    <div class="metric">
+      <h3>∞</h3>
+      <span>Narrative Depth</span>
+    </div>
+    <div class="metric">
+      <h3>0%</h3>
+      <span>False Promises</span>
+    </div>
+    <div class="metric">
+      <h3>1</h3>
+      <span>Collective Signal</span>
+    </div>
+    <div class="metric">
+      <h3>HUMN</h3>
+      <span>Over Noise</span>
+    </div>
   </div>
-</div>
+</section>
+
+<section class="section" id="paper">
+  <h2>The Human Paper</h2>
+  <p>
+    This is the canonical reference document for $HUMN.
+    Read it. Interpret it. Share it.
+  </p>
+
+  <div class="whitepaper">
+    <iframe
+      src="https://humanpaper.netlify.app/"
+      width="100%"
+      height="500"
+      style="border:0;">
+    </iframe>
+  </div>
+</section>
+
+<footer>
+  © HUMAN LORE — Knightshade Signal
+</footer>
+
+<script>
+const container = document.getElementById('particles');
+for (let i = 0; i < 50; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + 'vw';
+  p.style.animationDuration = 10 + Math.random() * 20 + 's';
+  p.style.animationDelay = Math.random() * 10 + 's';
+  container.appendChild(p);
+}
+</script>
 
 </body>
 </html>
