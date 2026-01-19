@@ -134,3 +134,45 @@ h1 {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(155, 92, 255, 0.25);
 }
+/* FLOATING PARTICLES */
+
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particles span {
+  position: absolute;
+  bottom: -120px;
+  width: 6px;
+  height: 6px;
+  background: rgba(155, 92, 255, 0.35);
+  border-radius: 50%;
+  animation: floatUp 14s linear infinite;
+  filter: blur(1px);
+}
+
+/* Each particle different */
+.particles span:nth-child(1) { left: 10%; animation-duration: 12s; }
+.particles span:nth-child(2) { left: 25%; animation-duration: 18s; width: 4px; height: 4px; }
+.particles span:nth-child(3) { left: 45%; animation-duration: 15s; }
+.particles span:nth-child(4) { left: 65%; animation-duration: 20s; width: 3px; height: 3px; }
+.particles span:nth-child(5) { left: 80%; animation-duration: 16s; }
+.particles span:nth-child(6) { left: 90%; animation-duration: 22s; width: 5px; height: 5px; }
+
+@keyframes floatUp {
+  from {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.4;
+  }
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+}
+
