@@ -168,6 +168,140 @@ particlesJS("particles-js", {
 
 </body>
 </html>
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero-content {
+  max-width: 800px;
+}
+
+/* TOKEN SYMBOL */
+.token {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  border: 2px solid rgba(155,92,255,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  animation: spin 14s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* TEXT */
+h1 {
+  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  letter-spacing: 0.12em;
+  margin-bottom: 1rem;
+}
+
+.tagline {
+  opacity: 0.7;
+  margin-bottom: 2.2rem;
+}
+
+/* BUTTONS */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.9rem 1.7rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  text-decoration: none;
+  font-size: 0.95rem;
+  backdrop-filter: blur(6px);
+  transition: all 0.25s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(155,92,255,0.9);
+}
+
+/* FOOTER */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.85rem;
+  opacity: 0.4;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PARTICLES -->
+<div id="particles-js"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+
+    <div class="token">$H</div>
+
+    <h1>Welcome to $HUMN</h1>
+
+    <p class="tagline">
+      Every candle is a human.<br>
+      Buy together. Stay together. Win together.
+    </p>
+
+    <div class="buttons">
+      <a href="whitepaper.html" class="btn">Read the Human Paper</a>
+      <a href="https://x.com/knightshadeops?s=21" target="_blank" class="btn">Follow on X</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  © HUMAN LORE — Signal over noise.
+</footer>
+
+<!-- PARTICLES CONFIG -->
+<script>
+particlesJS("particles-js", {
+  particles: {
+    number: { value: 90 },
+    color: { value: "#9b5cff" },
+    shape: { type: "circle" },
+    opacity: { value: 0.4 },
+    size: { value: 2 },
+    move: { speed: 0.6 }
+  },
+  interactivity: {
+    events: {
+      onhover: { enable: true, mode: "repulse" }
+    }
+  },
+  retina_detect: true
+});
+</script>
+
+</body>
+</html>
   min-height: 100vh;
   display: flex;
   align-items: center;
