@@ -1,39 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>$HUMN — Human Lore</title>
 
+<!-- PARTICLES -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
 <style>
-/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ===== BODY ===== */
-body {
+html, body {
+  width: 100%;
+  height: 100%;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background:
-    radial-gradient(circle at 20% 10%, #2b0f3f, transparent 40%),
-    radial-gradient(circle at 80% 90%, #0a3a2a, transparent 40%),
-    linear-gradient(180deg, #050008, #020005);
-  color: #ffffff;
   overflow-x: hidden;
+  background: #020005;
+  color: white;
 }
 
-/* ===== FLOATING GRID ===== */
-body::before {
-  content: "";
+#particles-js {
   position: fixed;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
+  z-index: 0;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 900px;
+}
+
+/* TOKEN CIRCLE */
+.token {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  border: 2px solid rgba(155, 92, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.8rem;
+  animation: spin 12s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* TEXT */
+h1 {
+  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  letter-spacing: 0.12em;
+  margin-bottom: 1rem;
+}
+
+p {
+  opacity: 0.7;
+  max-width: 720px;
+  margin: 0 auto 2rem;
+}
+
+/* BUTTONS */
+.buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.9rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: white;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(6px);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(155,92,255,0.8);
+}
+
+/* FOOTER */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 1.5rem;
+  opacity: 0.4;
+  font-size: 0.85rem;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PARTICLES BACKGROUND -->
+<div id="particles-js"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+
+    <div class="token">$H</div>
+
+    <h1>Welcome to $HUMN</h1>
+
+    <p>
+      Every candle is a human.<br>
+      Buy together. Stay together. Win together.
+    </p>
+
+    <div class="buttons">
+      <a href="whitepaper.html" class="btn">Read the Human Paper</a>
+      <a href="https://x.com/knightshadeops?s=21" target="_blank" class="btn">Follow on X</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  © HUMAN LORE — Signal over noise.
+</footer>
+
+<!-- PARTICLES CONFIG -->
+<script>
+particlesJS("particles-js", {
+  particles: {
+    number: { value: 80 },
+    color: { value: "#9b5cff" },
+    shape: { type: "circle" },
+    opacity: { value: 0.4 },
+    size: { value: 2 },
+    move: { speed: 0.6 }
+  },
+  interactivity: {
+    events: { onhover: { enable: true, mode: "repulse" } }
+  },
+  retina_detect: true
+});
+</script>
+
+</body>
+</html>
   z-index: 0;
 }
 
