@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Human Lore — $HUMN</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #020005;
+  color: white;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(155,92,255,0.15), transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(90,40,200,0.12), transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(120,60,255,0.1), transparent 50%);
+  z-index: -1;
+}
+
+.container {
+  max-width: 720px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  letter-spacing: 0.15em;
+  margin-bottom: 1rem;
+}
+
+.desc {
+  text-align: center;
+  opacity: 0.7;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+textarea {
+  width: 100%;
+  min-height: 120px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  color: white;
+  font-size: 0.95rem;
+  resize: none;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: rgba(155,92,255,0.9);
+}
+
+.lore-feed {
+  margin-top: 3rem;
+}
+
+.lore {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.time {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  margin-top: 0.6rem;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>HUMAN LORE</h1>
+
+<p class="desc">
+Say what you were never allowed to say.<br>
+No names. No judgment. Just human.
+</p>
+
+<textarea id="loreInput" maxlength="500" placeholder="Release it..."></textarea>
+<button onclick="submitLore()">Release</button>
+
+<div class="lore-feed" id="loreFeed"></div>
+
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+/* 🔥 REPLACE THIS WITH YOUR CONFIG 🔥 */
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+};
+
+/* INIT */
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/* SUBMIT */
+function submitLore() {
+  const text = loreInput.value.trim();
+  if (!text) return;
+
+  db.collection("lore").add({
+    text,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+
+  loreInput.value = "";
+}
+
+/* LOAD */
+db.collection("lore")
+  .orderBy("createdAt", "desc")
+  .onSnapshot(snapshot => {
+    loreFeed.innerHTML = "";
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      const div = document.createElement("div");
+      div.className = "lore";
+      div.innerHTML = `
+        <div>${d.text}</div>
+        <div class="time">${d.createdAt?.toDate().toLocaleString() || ""}</div>
+      `;
+      loreFeed.appendChild(div);
+    });
+  });
+</script>
+
+</body>
+</html>
