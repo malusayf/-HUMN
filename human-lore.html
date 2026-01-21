@@ -105,7 +105,7 @@ button:disabled {
 <p class="desc">Anonymous. Permanent. Human.</p>
 
 <textarea id="loreInput" maxlength="500" placeholder="Say it. Release it."></textarea>
-<button id="submitBtn" onclick="submitLore()" disabled>Connecting…</button>
+<button id="submitBtn" disabled>Connecting…</button>
 
 <div class="lore-feed" id="loreFeed"></div>
 
@@ -117,7 +117,7 @@ button:disabled {
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-/* 🔥 PUT YOUR REAL FIREBASE CONFIG HERE 🔥 */
+/* 🔥 YOUR REAL FIREBASE CONFIG 🔥 */
 const firebaseConfig = {
   apiKey: "YOUR_KEY",
   authDomain: "YOUR_DOMAIN",
@@ -129,24 +129,35 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-let humanId = null;
 const submitBtn = document.getElementById("submitBtn");
+const loreInput = document.getElementById("loreInput");
+const loreFeed = document.getElementById("loreFeed");
 
-/* AUTH — persistent anonymous identity */
+let humanId = null;
+
+/* 🔐 AUTH — guaranteed anonymous + persistent */
+submitBtn.textContent = "Connecting…";
+submitBtn.disabled = true;
+
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-.then(() => auth.signInAnonymously())
-.catch(console.error);
-
-auth.onAuthStateChanged(user => {
-  if (user) {
-    humanId = "HUMN-" + user.uid.slice(0, 4).toUpperCase();
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Release";
-  }
+.then(() => {
+  return auth.signInAnonymously();
+})
+.catch(err => {
+  console.error("AUTH ERROR:", err);
+  submitBtn.textContent = "Auth Error";
 });
 
-/* SUBMIT */
-function submitLore() {
+auth.onAuthStateChanged(user => {
+  if (!user) return;
+
+  humanId = "HUMN-" + user.uid.slice(0, 4).toUpperCase();
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Release";
+});
+
+/* ✍️ SUBMIT */
+submitBtn.addEventListener("click", () => {
   const text = loreInput.value.trim();
   if (!text || !humanId) return;
 
@@ -157,9 +168,9 @@ function submitLore() {
   });
 
   loreInput.value = "";
-}
+});
 
-/* LIVE GLOBAL FEED */
+/* 🌍 LIVE GLOBAL FEED */
 db.collection("lore")
   .orderBy("createdAt", "desc")
   .onSnapshot(snapshot => {
