@@ -111,17 +111,20 @@ button:disabled {
 
 </div>
 
-<!-- Firebase -->
+<!-- Firebase COMPAT SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-/* 🔥 YOUR REAL FIREBASE CONFIG 🔥 */
+/* 🔥 YOUR REAL FIREBASE CONFIG (COMPAT SAFE) 🔥 */
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
+  apiKey: "AIzaSyDBGuuG8rYwiIad9kNzkGSMOUmemqaU2g",
+  authDomain: "humn-f12fa.firebaseapp.com",
+  projectId: "humn-f12fa",
+  storageBucket: "humn-f12fa.appspot.com",
+  messagingSenderId: "900623421542",
+  appId: "1:900623421542:web:1c61fa2adab0af8d65dda7"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -135,28 +138,23 @@ const loreFeed = document.getElementById("loreFeed");
 
 let humanId = null;
 
-/* 🔐 AUTH — guaranteed anonymous + persistent */
-submitBtn.textContent = "Connecting…";
-submitBtn.disabled = true;
-
+/* AUTH — persistent anonymous identity */
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-.then(() => {
-  return auth.signInAnonymously();
-})
-.catch(err => {
-  console.error("AUTH ERROR:", err);
-  submitBtn.textContent = "Auth Error";
-});
+  .then(() => auth.signInAnonymously())
+  .catch(err => {
+    console.error("AUTH ERROR:", err);
+    submitBtn.textContent = "Auth Error";
+  });
 
 auth.onAuthStateChanged(user => {
-  if (!user) return;
-
-  humanId = "HUMN-" + user.uid.slice(0, 4).toUpperCase();
-  submitBtn.disabled = false;
-  submitBtn.textContent = "Release";
+  if (user) {
+    humanId = "HUMN-" + user.uid.slice(0, 4).toUpperCase();
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Release";
+  }
 });
 
-/* ✍️ SUBMIT */
+/* SUBMIT */
 submitBtn.addEventListener("click", () => {
   const text = loreInput.value.trim();
   if (!text || !humanId) return;
@@ -170,7 +168,7 @@ submitBtn.addEventListener("click", () => {
   loreInput.value = "";
 });
 
-/* 🌍 LIVE GLOBAL FEED */
+/* LIVE GLOBAL FEED */
 db.collection("lore")
   .orderBy("createdAt", "desc")
   .onSnapshot(snapshot => {
