@@ -9,99 +9,51 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: system-ui, sans-serif;
   background: #020005;
   color: white;
   min-height: 100vh;
   padding: 2rem;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(155,92,255,0.15), transparent 40%),
-    radial-gradient(circle at 80% 60%, rgba(90,40,200,0.12), transparent 45%),
-    radial-gradient(circle at 50% 90%, rgba(120,60,255,0.1), transparent 50%);
-  z-index: -1;
-}
+.container { max-width: 720px; margin: auto; }
 
-.container {
-  max-width: 720px;
-  margin: auto;
-}
+h1 { text-align: center; letter-spacing: 0.15em; margin-bottom: .5rem; }
+.desc { text-align: center; opacity: .7; margin-bottom: 2rem; }
 
-h1 {
-  text-align: center;
-  letter-spacing: 0.15em;
-  margin-bottom: 0.5rem;
-}
-
-.desc {
-  text-align: center;
-  opacity: 0.7;
-  font-size: 0.95rem;
-  margin-bottom: 2rem;
-}
-
-textarea {
+input, textarea {
   width: 100%;
-  min-height: 120px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.2);
   border-radius: 12px;
   padding: 1rem;
   color: white;
-  font-size: 0.95rem;
-  resize: none;
+  margin-bottom: .6rem;
 }
 
 button {
-  margin-top: 1rem;
-  padding: 0.8rem 1.6rem;
+  padding: .8rem 1.6rem;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,.3);
+  background: rgba(255,255,255,.08);
   color: white;
   cursor: pointer;
+  width: 100%;
 }
 
-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+.status { text-align: center; opacity: .6; margin-top: .5rem; }
 
-.status {
-  margin-top: 0.6rem;
-  font-size: 0.8rem;
-  opacity: 0.6;
-  text-align: center;
-}
-
-.lore-feed {
-  margin-top: 3rem;
-}
-
+.lore-feed { margin-top: 3rem; }
 .lore {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.15);
   border-radius: 14px;
   padding: 1rem;
   margin-bottom: 1rem;
 }
-
-.user {
-  font-size: 0.8rem;
-  opacity: 0.6;
-  margin-bottom: 0.4rem;
-}
-
-.time {
-  font-size: 0.7rem;
-  opacity: 0.4;
-  margin-top: 0.6rem;
-}
+.user { font-size: .8rem; opacity: .6; margin-bottom: .4rem; }
+.time { font-size: .7rem; opacity: .4; margin-top: .6rem; }
+.hidden { display: none; }
 </style>
 </head>
 
@@ -109,107 +61,107 @@ button:disabled {
 <div class="container">
 
 <h1>HUMAN LORE</h1>
-<p class="desc">Anonymous. Permanent. Human.</p>
+<p class="desc">Account-backed. Publicly anonymous. Permanent.</p>
 
-<textarea id="loreInput" maxlength="500" placeholder="Say it. Release it."></textarea>
-<button id="submitBtn" disabled>Connecting…</button>
-<div class="status" id="statusText">Establishing identity…</div>
+<!-- AUTH -->
+<div id="authBox">
+  <input id="email" placeholder="Email" />
+  <input id="password" type="password" placeholder="Password" />
+  <button id="loginBtn">Login / Sign Up</button>
+  <div class="status" id="authStatus"></div>
+</div>
+
+<!-- POST -->
+<div id="loreBox" class="hidden">
+  <textarea id="loreInput" maxlength="500" placeholder="Say it. Release it."></textarea>
+  <button id="submitBtn">Release</button>
+  <div class="status" id="userStatus"></div>
+</div>
 
 <div class="lore-feed" id="loreFeed"></div>
 
 </div>
 
-<!-- Firebase COMPAT SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-/* 🔥 FIREBASE CONFIG 🔥 */
 const firebaseConfig = {
   apiKey: "AIzaSyDBGuuG8rYwiIad9kNzkGSMOUmemqaU2g",
   authDomain: "humn-f12fa.firebaseapp.com",
   projectId: "humn-f12fa",
-  storageBucket: "humn-f12fa.appspot.com",
-  messagingSenderId: "900623421542",
-  appId: "1:900623421542:web:1c61fa2adab0af8d65dda7"
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-const submitBtn = document.getElementById("submitBtn");
-const loreInput = document.getElementById("loreInput");
-const loreFeed = document.getElementById("loreFeed");
-const statusText = document.getElementById("statusText");
+const authBox = document.getElementById("authBox");
+const loreBox = document.getElementById("loreBox");
+const authStatus = document.getElementById("authStatus");
+const userStatus = document.getElementById("userStatus");
 
 let humanId = null;
 
-/* AUTH */
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-  .then(() => auth.signInAnonymously())
-  .catch(err => {
-    console.error("AUTH FAILURE:", err);
-    statusText.textContent = "Auth failed. Refresh page.";
-  });
-
-auth.onAuthStateChanged(user => {
-  if (user) {
-    humanId = "HUMN-" + user.uid.slice(0, 4).toUpperCase();
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Release";
-    statusText.textContent = "You are " + humanId;
-  }
-});
-
-/* SUBMIT */
-submitBtn.addEventListener("click", async () => {
-  const text = loreInput.value.trim();
-  if (!text || !humanId) return;
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Releasing…";
-
+/* LOGIN / SIGNUP */
+document.getElementById("loginBtn").onclick = async () => {
+  const email = email.value;
+  const password = password.value;
   try {
-    await db.collection("lore").add({
-      text,
-      human: humanId,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    loreInput.value = "";
-    submitBtn.textContent = "Release";
-    submitBtn.disabled = false;
-  } catch (err) {
-    console.error("FIRESTORE ERROR:", err);
-    submitBtn.textContent = "Post failed";
-    submitBtn.disabled = false;
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch {
+    await auth.createUserWithEmailAndPassword(email, password);
   }
+};
+
+auth.onAuthStateChanged(async user => {
+  if (!user) return;
+
+  authBox.classList.add("hidden");
+  loreBox.classList.remove("hidden");
+
+  const ref = db.collection("users").doc(user.uid);
+  const snap = await ref.get();
+
+  if (!snap.exists) {
+    humanId = "HUMN-" + Math.random().toString(36).slice(2,6).toUpperCase();
+    await ref.set({ humanId });
+  } else {
+    humanId = snap.data().humanId;
+  }
+
+  userStatus.textContent = "You are " + humanId;
 });
 
-/* LIVE FEED */
-db.collection("lore")
-  .orderBy("createdAt", "desc")
-  .onSnapshot(snapshot => {
-    loreFeed.innerHTML = "";
-    snapshot.forEach(doc => {
-      const d = doc.data();
-      if (!d.text || !d.human) return;
+/* POST */
+submitBtn.onclick = async () => {
+  const text = loreInput.value.trim();
+  if (!text) return;
 
-      const div = document.createElement("div");
-      div.className = "lore";
-      div.innerHTML = `
-        <div class="user">${d.human}</div>
-        <div>${d.text}</div>
-        <div class="time">${d.createdAt ? d.createdAt.toDate().toLocaleString() : ""}</div>
-      `;
-      loreFeed.appendChild(div);
-    });
-  }, err => {
-    console.error("LISTENER ERROR:", err);
+  await db.collection("lore").add({
+    text,
+    human: humanId,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
+
+  loreInput.value = "";
+};
+
+/* FEED */
+db.collection("lore").orderBy("createdAt", "desc")
+.onSnapshot(snap => {
+  loreFeed.innerHTML = "";
+  snap.forEach(d => {
+    const x = d.data();
+    loreFeed.innerHTML += `
+      <div class="lore">
+        <div class="user">${x.human}</div>
+        <div>${x.text}</div>
+        <div class="time">${x.createdAt?.toDate().toLocaleString() || ""}</div>
+      </div>`;
+  });
+});
 </script>
 
 </body>
