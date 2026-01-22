@@ -72,6 +72,13 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.status {
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  text-align: center;
+}
+
 .lore-feed {
   margin-top: 3rem;
 }
@@ -106,6 +113,7 @@ button:disabled {
 
 <textarea id="loreInput" maxlength="500" placeholder="Say it. Release it."></textarea>
 <button id="submitBtn" disabled>Connecting…</button>
+<div class="status" id="statusText">Establishing identity…</div>
 
 <div class="lore-feed" id="loreFeed"></div>
 
@@ -117,7 +125,7 @@ button:disabled {
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-/* 🔥 YOUR REAL FIREBASE CONFIG (COMPAT SAFE) 🔥 */
+/* 🔥 FIREBASE CONFIG 🔥 */
 const firebaseConfig = {
   apiKey: "AIzaSyDBGuuG8rYwiIad9kNzkGSMOUmemqaU2g",
   authDomain: "humn-f12fa.firebaseapp.com",
@@ -135,15 +143,16 @@ const db = firebase.firestore();
 const submitBtn = document.getElementById("submitBtn");
 const loreInput = document.getElementById("loreInput");
 const loreFeed = document.getElementById("loreFeed");
+const statusText = document.getElementById("statusText");
 
 let humanId = null;
 
-/* AUTH — persistent anonymous identity */
+/* AUTH */
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
   .then(() => auth.signInAnonymously())
   .catch(err => {
-    console.error("AUTH ERROR:", err);
-    submitBtn.textContent = "Auth Error";
+    console.error("AUTH FAILURE:", err);
+    statusText.textContent = "Auth failed. Refresh page.";
   });
 
 auth.onAuthStateChanged(user => {
@@ -151,24 +160,36 @@ auth.onAuthStateChanged(user => {
     humanId = "HUMN-" + user.uid.slice(0, 4).toUpperCase();
     submitBtn.disabled = false;
     submitBtn.textContent = "Release";
+    statusText.textContent = "You are " + humanId;
   }
 });
 
 /* SUBMIT */
-submitBtn.addEventListener("click", () => {
+submitBtn.addEventListener("click", async () => {
   const text = loreInput.value.trim();
   if (!text || !humanId) return;
 
-  db.collection("lore").add({
-    text,
-    human: humanId,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  });
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Releasing…";
 
-  loreInput.value = "";
+  try {
+    await db.collection("lore").add({
+      text,
+      human: humanId,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    loreInput.value = "";
+    submitBtn.textContent = "Release";
+    submitBtn.disabled = false;
+  } catch (err) {
+    console.error("FIRESTORE ERROR:", err);
+    submitBtn.textContent = "Post failed";
+    submitBtn.disabled = false;
+  }
 });
 
-/* LIVE GLOBAL FEED */
+/* LIVE FEED */
 db.collection("lore")
   .orderBy("createdAt", "desc")
   .onSnapshot(snapshot => {
@@ -182,10 +203,12 @@ db.collection("lore")
       div.innerHTML = `
         <div class="user">${d.human}</div>
         <div>${d.text}</div>
-        <div class="time">${d.createdAt?.toDate().toLocaleString() || ""}</div>
+        <div class="time">${d.createdAt ? d.createdAt.toDate().toLocaleString() : ""}</div>
       `;
       loreFeed.appendChild(div);
     });
+  }, err => {
+    console.error("LISTENER ERROR:", err);
   });
 </script>
 
