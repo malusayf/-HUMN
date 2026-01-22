@@ -65,8 +65,8 @@ button {
 
 <!-- AUTH -->
 <div id="authBox">
-  <input id="email" placeholder="Email" />
-  <input id="password" type="password" placeholder="Password" />
+  <input id="emailInput" placeholder="Email" />
+  <input id="passwordInput" type="password" placeholder="Password" />
   <button id="loginBtn">Login / Sign Up</button>
   <div class="status" id="authStatus"></div>
 </div>
@@ -94,27 +94,48 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+/* DOM */
 const authBox = document.getElementById("authBox");
 const loreBox = document.getElementById("loreBox");
 const authStatus = document.getElementById("authStatus");
 const userStatus = document.getElementById("userStatus");
 
+const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
+const submitBtn = document.getElementById("submitBtn");
+const loreInput = document.getElementById("loreInput");
+const loreFeed = document.getElementById("loreFeed");
+
 let humanId = null;
 
 /* LOGIN / SIGNUP */
-document.getElementById("loginBtn").onclick = async () => {
-  const email = email.value;
-  const password = password.value;
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if (!email || !password) {
+    authStatus.textContent = "Enter email and password.";
+    return;
+  }
+
+  authStatus.textContent = "Authenticating…";
+
   try {
     await auth.signInWithEmailAndPassword(email, password);
-  } catch {
-    await auth.createUserWithEmailAndPassword(email, password);
+  } catch (err) {
+    if (err.code === "auth/user-not-found") {
+      await auth.createUserWithEmailAndPassword(email, password);
+    } else {
+      authStatus.textContent = err.message;
+    }
   }
-};
+});
 
+/* SESSION */
 auth.onAuthStateChanged(async user => {
   if (!user) return;
 
@@ -135,7 +156,7 @@ auth.onAuthStateChanged(async user => {
 });
 
 /* POST */
-submitBtn.onclick = async () => {
+submitBtn.addEventListener("click", async () => {
   const text = loreInput.value.trim();
   if (!text) return;
 
@@ -146,10 +167,11 @@ submitBtn.onclick = async () => {
   });
 
   loreInput.value = "";
-};
+});
 
 /* FEED */
-db.collection("lore").orderBy("createdAt", "desc")
+db.collection("lore")
+.orderBy("createdAt", "desc")
 .onSnapshot(snap => {
   loreFeed.innerHTML = "";
   snap.forEach(d => {
