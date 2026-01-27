@@ -137,6 +137,7 @@ h1 {
   position: relative;
   overflow: hidden;
   transition: transform 0.2s ease, background 0.3s ease;
+  text-decoration: none;
 }
 
 .btn::after {
@@ -160,7 +161,7 @@ h1 {
   to { transform: translateX(120%); }
 }
 
-/* ---------------- FOOTER TEXT ---------------- */
+/* ---------------- FOOTER ---------------- */
 .footer {
   position: absolute;
   bottom: 1.2rem;
@@ -169,7 +170,7 @@ h1 {
   letter-spacing: 0.08rem;
 }
 
-/* ---------------- FLOATING PARTICLES ---------------- */
+/* ---------------- PARTICLES ---------------- */
 .particle {
   position: absolute;
   width: 2px;
@@ -204,10 +205,19 @@ h1 {
   </div>
 
   <div class="buttons">
-    <button class="btn" onclick="location.href='human-lore.html'">Human Lore</button>
-    <button class="btn">Read the Human Paper</button>
-    <button class="btn">Community Telegram</button>
-    <button class="btn">Follow on X</button>
+    <a class="btn" href="human-lore.html">Human Lore</a>
+
+    <a class="btn" href="human-paper.html">
+      Read the Human Paper
+    </a>
+
+    <a class="btn" href="https://t.me/YOUR_TELEGRAM" target="_blank">
+      Community Telegram
+    </a>
+
+    <a class="btn" href="https://x.com/YOUR_X_HANDLE" target="_blank">
+      Follow on X
+    </a>
   </div>
 
 </div>
