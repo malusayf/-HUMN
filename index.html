@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>$HUMN — Human</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>$HUMN — Human Coin</title>
 
 <style>
+/* ---------------- RESET ---------------- */
 * {
   margin: 0;
   padding: 0;
@@ -13,149 +14,219 @@
 }
 
 html, body {
-  width: 100%;
   height: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #020005;
-  color: #ffffff;
-  overflow-x: hidden;
+  background: radial-gradient(circle at top, #0b0f18, #05070c);
+  color: #f2f2f2;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
 }
 
+/* ---------------- BACKGROUND HUD ---------------- */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 20%, rgba(155,92,255,0.15), transparent 40%),
-    radial-gradient(circle at 80% 60%, rgba(90,40,200,0.12), transparent 45%),
-    radial-gradient(circle at 50% 90%, rgba(120,60,255,0.1), transparent 50%);
-  z-index: 0;
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.15;
+  pointer-events: none;
 }
 
-.hero {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.03),
+    rgba(255,255,255,0.03) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* ---------------- LAYOUT ---------------- */
+.container {
+  height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
+  gap: 1.6rem;
   padding: 2rem;
 }
 
-.hero-content {
-  max-width: 780px;
+/* ---------------- COIN ---------------- */
+.coin-wrapper {
+  width: 140px;
+  height: 140px;
+  perspective: 1000px;
 }
 
-.token {
-  width: 90px;
-  height: 90px;
-  margin: 0 auto 1.6rem;
+.coin {
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  border: 2px solid rgba(155,92,255,0.8);
+  background:
+    radial-gradient(circle at 30% 30%, #fff4c4, #d4af37 40%, #8a6b1f 70%);
+  box-shadow:
+    0 0 30px rgba(255,215,0,0.6),
+    inset 0 0 20px rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.9rem;
+  animation: spin 12s linear infinite;
+  position: relative;
+}
+
+.coin::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.4);
+}
+
+.coin span {
+  font-size: 2.2rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  animation: spin 14s linear infinite;
+  color: #2a1d00;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.6);
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
 }
 
+/* ---------------- TITLE ---------------- */
 h1 {
-  font-size: clamp(2.4rem, 6vw, 3.6rem);
-  letter-spacing: 0.14em;
-  margin-bottom: 1rem;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  letter-spacing: 0.25rem;
 }
 
 .tagline {
-  opacity: 0.7;
-  font-size: 1rem;
+  opacity: 0.85;
+  font-size: 0.95rem;
   line-height: 1.6;
-  margin-bottom: 2.4rem;
 }
 
+/* ---------------- BUTTONS ---------------- */
 .buttons {
   display: flex;
-  justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1.5rem;
 }
 
 .btn {
-  padding: 0.9rem 1.8rem;
+  padding: 0.6rem 1.4rem;
   border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
   background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.18);
   color: white;
-  text-decoration: none;
-  font-size: 0.95rem;
-  backdrop-filter: blur(6px);
-  transition: all 0.25s ease;
+  cursor: pointer;
+  font-size: 0.85rem;
+  letter-spacing: 0.04rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: translateX(-120%);
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  border-color: rgba(155,92,255,0.9);
+  background: rgba(155,92,255,0.18);
 }
 
-footer {
-  text-align: center;
-  padding: 1.5rem;
-  font-size: 0.85rem;
-  opacity: 0.45;
+.btn:hover::after {
+  animation: shine 0.8s ease forwards;
+}
+
+@keyframes shine {
+  to { transform: translateX(120%); }
+}
+
+/* ---------------- FOOTER TEXT ---------------- */
+.footer {
+  position: absolute;
+  bottom: 1.2rem;
+  font-size: 0.7rem;
+  opacity: 0.4;
+  letter-spacing: 0.08rem;
+}
+
+/* ---------------- FLOATING PARTICLES ---------------- */
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(255,255,255,0.4);
+  animation: drift linear infinite;
+}
+
+@keyframes drift {
+  from { transform: translateY(110vh); }
+  to   { transform: translateY(-10vh); }
 }
 </style>
 </head>
 
 <body>
 
-<section class="hero">
-  <div class="hero-content">
+<div class="container">
 
-    <div class="token">$H</div>
-
-    <h1>Welcome to $HUMN</h1>
-
-    <p class="tagline">
-      Every candle is a human.<br>
-      Buy together. Stay together. Win together.<br><br>
-      Every season is $HUMN season.
-    </p>
-
-    <div class="buttons">
-
-      <!-- ✅ HUMAN LORE (CONFIRMED WORKING URL) -->
-      <a href="https://malusayf.github.io/-HUMN/human-lore.html" class="btn">
-        Human Lore
-      </a>
-
-      <!-- ⚠️ HUMAN PAPER (CHANGE ONLY IF FILE NAME IS DIFFERENT) -->
-      <a href="https://malusayf.github.io/-HUMN/human-paper.html" class="btn">
-        Read the Human Paper
-      </a>
-
-      <a href="https://t.me/HUMNtalk" target="_blank" class="btn">
-        Community Telegram
-      </a>
-
-      <a href="https://x.com/knightshadeops?s=21" target="_blank" class="btn">
-        Follow on X
-      </a>
-
+  <div class="coin-wrapper">
+    <div class="coin">
+      <span>H</span>
     </div>
-
   </div>
-</section>
 
-<footer>
-  © $HUMN — Stay human.
-</footer>
+  <h1>WELCOME TO $HUMN</h1>
+
+  <div class="tagline">
+    Every candle is a human.<br/>
+    Buy together. Stay together. Win together.<br/><br/>
+    Every season is $HUMN season.
+  </div>
+
+  <div class="buttons">
+    <button class="btn" onclick="location.href='human-lore.html'">Human Lore</button>
+    <button class="btn">Read the Human Paper</button>
+    <button class="btn">Community Telegram</button>
+    <button class="btn">Follow on X</button>
+  </div>
+
+</div>
+
+<div class="footer">
+  $HUMN — Human Layer Protocol
+</div>
+
+<script>
+/* PARTICLES */
+for (let i = 0; i < 40; i++) {
+  const p = document.createElement("div");
+  p.className = "particle";
+  p.style.left = Math.random() * 100 + "vw";
+  p.style.animationDuration = (8 + Math.random() * 12) + "s";
+  p.style.opacity = Math.random() * 0.5;
+  document.body.appendChild(p);
+}
+</script>
 
 </body>
 </html>
