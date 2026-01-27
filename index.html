@@ -116,6 +116,29 @@ h1 {
   line-height: 1.6;
 }
 
+/* ---------------- COUNTDOWN ---------------- */
+.countdown {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.08rem;
+}
+
+.countdown div {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
+  min-width: 70px;
+}
+
+.countdown span {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
 /* ---------------- BUTTONS ---------------- */
 .buttons {
   display: flex;
@@ -169,7 +192,7 @@ h1 {
   letter-spacing: 0.08rem;
 }
 
-/* ---------------- FLOATING PARTICLES ---------------- */
+/* ---------------- PARTICLES ---------------- */
 .particle {
   position: absolute;
   width: 2px;
@@ -190,9 +213,7 @@ h1 {
 <div class="container">
 
   <div class="coin-wrapper">
-    <div class="coin">
-      <span>H</span>
-    </div>
+    <div class="coin"><span>H</span></div>
   </div>
 
   <h1>WELCOME TO $HUMN</h1>
@@ -203,20 +224,19 @@ h1 {
     Every season is $HUMN season.
   </div>
 
+  <!-- COUNTDOWN -->
+  <div class="countdown" id="countdown">
+    <div><span id="days">--</span>DAYS</div>
+    <div><span id="hours">--</span>HRS</div>
+    <div><span id="minutes">--</span>MIN</div>
+    <div><span id="seconds">--</span>SEC</div>
+  </div>
+
   <div class="buttons">
     <button class="btn" onclick="location.href='human-lore.html'">Human Lore</button>
-
-    <button class="btn" onclick="location.href='human-paper.html'">
-      Read the Human Paper
-    </button>
-
-    <button class="btn" onclick="window.open('https://t.me/HUMNtalk', '_blank')">
-      Community Telegram
-    </button>
-
-    <button class="btn" onclick="window.open('https://x.com/knightshadeops?s=21', '_blank')">
-      Follow on X
-    </button>
+    <button class="btn" onclick="location.href='human-paper.html'">Read the Human Paper</button>
+    <button class="btn" onclick="window.open('https://t.me/HUMNtalk','_blank')">Community Telegram</button>
+    <button class="btn" onclick="window.open('https://x.com/knightshadeops?s=21','_blank')">Follow on X</button>
   </div>
 
 </div>
@@ -226,7 +246,7 @@ h1 {
 </div>
 
 <script>
-/* PARTICLES */
+/* ---------------- PARTICLES ---------------- */
 for (let i = 0; i < 40; i++) {
   const p = document.createElement("div");
   p.className = "particle";
@@ -235,6 +255,22 @@ for (let i = 0; i < 40; i++) {
   p.style.opacity = Math.random() * 0.5;
   document.body.appendChild(p);
 }
+
+/* ---------------- COUNTDOWN (6PM EST) ---------------- */
+// Feb 12, 2026 6:00 PM EST = Feb 12, 2026 23:00 UTC
+const launchDate = new Date("2026-02-12T23:00:00Z").getTime();
+
+setInterval(() => {
+  const now = new Date().getTime();
+  const diff = launchDate - now;
+
+  if (diff <= 0) return;
+
+  document.getElementById("days").textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
+  document.getElementById("hours").textContent = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  document.getElementById("minutes").textContent = Math.floor((diff / (1000 * 60)) % 60);
+  document.getElementById("seconds").textContent = Math.floor((diff / 1000) % 60);
+}, 1000);
 </script>
 
 </body>
