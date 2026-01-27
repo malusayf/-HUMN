@@ -1,190 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Human Lore — $HUMN</title>
-
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: system-ui, sans-serif;
-  background: #020005;
-  color: white;
-  min-height: 100vh;
-  padding: 2rem;
-}
-
-.container { max-width: 720px; margin: auto; }
-
-h1 { text-align: center; letter-spacing: 0.15em; margin-bottom: .5rem; }
-.desc { text-align: center; opacity: .7; margin-bottom: 2rem; }
-
-input, textarea {
-  width: 100%;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.2);
-  border-radius: 12px;
-  padding: 1rem;
-  color: white;
-  margin-bottom: .6rem;
-}
-
-button {
-  padding: .8rem 1.6rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.3);
-  background: rgba(255,255,255,.08);
-  color: white;
-  cursor: pointer;
-  width: 100%;
-}
-
-.status { text-align: center; opacity: .6; margin-top: .5rem; }
-
-.lore-feed { margin-top: 3rem; }
-.lore {
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.15);
-  border-radius: 14px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-.user { font-size: .8rem; opacity: .6; margin-bottom: .4rem; }
-.time { font-size: .7rem; opacity: .4; margin-top: .6rem; }
-.hidden { display: none; }
-</style>
-</head>
-
 <body>
+
 <div class="container">
 
-<h1>HUMAN LORE</h1>
-<p class="desc">Account-backed. Publicly anonymous. Permanent.</p>
+  <div class="header">
+    <h1>Human Lore</h1>
+    <p>Your private space. No audience. No judgment.</p>
+  </div>
 
-<!-- AUTH -->
-<div id="authBox">
-  <input id="emailInput" placeholder="Email" />
-  <input id="passwordInput" type="password" placeholder="Password" />
-  <button id="loginBtn">Login / Sign Up</button>
-  <div class="status" id="authStatus"></div>
+  <section>
+    <textarea
+      id="loreInput"
+      placeholder="Write what you cannot say out loud…"
+      style="
+        width: 100%;
+        min-height: 180px;
+        background: rgba(255,255,255,0.04);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.15);
+        padding: 1rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        resize: vertical;
+      "
+    ></textarea>
+
+    <button
+      onclick="saveLore()"
+      style="
+        margin-top: 1rem;
+        padding: 0.6rem 1.4rem;
+        background: rgba(155,92,255,0.2);
+        border: 1px solid rgba(155,92,255,0.4);
+        color: white;
+        cursor: pointer;
+        border-radius: 6px;
+      "
+    >
+      Save Lore
+    </button>
+  </section>
+
+  <section style="margin-top: 2.5rem;">
+    <h2>Your Past Entries</h2>
+    <div id="loreList" style="opacity: 0.8; font-size: 0.9rem;"></div>
+  </section>
+
 </div>
-
-<!-- POST -->
-<div id="loreBox" class="hidden">
-  <textarea id="loreInput" maxlength="500" placeholder="Say it. Release it."></textarea>
-  <button id="submitBtn">Release</button>
-  <div class="status" id="userStatus"></div>
-</div>
-
-<div class="lore-feed" id="loreFeed"></div>
-
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDBGuuG8rYwiIad9kNzkGSMOUmemqaU2g",
-  authDomain: "humn-f12fa.firebaseapp.com",
-  projectId: "humn-f12fa",
-};
+  const STORAGE_KEY = "human_lore_private";
 
-firebase.initializeApp(firebaseConfig);
+  function saveLore() {
+    const text = document.getElementById("loreInput").value.trim();
+    if (!text) return;
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    existing.unshift({
+      text,
+      time: new Date().toISOString()
+    });
 
-/* DOM */
-const authBox = document.getElementById("authBox");
-const loreBox = document.getElementById("loreBox");
-const authStatus = document.getElementById("authStatus");
-const userStatus = document.getElementById("userStatus");
-
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const submitBtn = document.getElementById("submitBtn");
-const loreInput = document.getElementById("loreInput");
-const loreFeed = document.getElementById("loreFeed");
-
-let humanId = null;
-
-/* LOGIN / SIGNUP */
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-
-  if (!email || !password) {
-    authStatus.textContent = "Enter email and password.";
-    return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+    document.getElementById("loreInput").value = "";
+    renderLore();
   }
 
-  authStatus.textContent = "Authenticating…";
+  function renderLore() {
+    const list = document.getElementById("loreList");
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
-  try {
-    await auth.signInWithEmailAndPassword(email, password);
-  } catch (err) {
-    if (err.code === "auth/user-not-found") {
-      await auth.createUserWithEmailAndPassword(email, password);
-    } else {
-      authStatus.textContent = err.message;
-    }
-  }
-});
-
-/* SESSION */
-auth.onAuthStateChanged(async user => {
-  if (!user) return;
-
-  authBox.classList.add("hidden");
-  loreBox.classList.remove("hidden");
-
-  const ref = db.collection("users").doc(user.uid);
-  const snap = await ref.get();
-
-  if (!snap.exists) {
-    humanId = "HUMN-" + Math.random().toString(36).slice(2,6).toUpperCase();
-    await ref.set({ humanId });
-  } else {
-    humanId = snap.data().humanId;
+    list.innerHTML = data
+      .map(
+        entry => `
+        <div style="margin-bottom: 1.2rem; padding-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <div style="opacity:0.5; font-size:0.75rem;">
+            ${new Date(entry.time).toLocaleString()}
+          </div>
+          <div>${entry.text.replace(/\n/g, "<br>")}</div>
+        </div>
+      `
+      )
+      .join("");
   }
 
-  userStatus.textContent = "You are " + humanId;
-});
-
-/* POST */
-submitBtn.addEventListener("click", async () => {
-  const text = loreInput.value.trim();
-  if (!text) return;
-
-  await db.collection("lore").add({
-    text,
-    human: humanId,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  });
-
-  loreInput.value = "";
-});
-
-/* FEED */
-db.collection("lore")
-.orderBy("createdAt", "desc")
-.onSnapshot(snap => {
-  loreFeed.innerHTML = "";
-  snap.forEach(d => {
-    const x = d.data();
-    loreFeed.innerHTML += `
-      <div class="lore">
-        <div class="user">${x.human}</div>
-        <div>${x.text}</div>
-        <div class="time">${x.createdAt?.toDate().toLocaleString() || ""}</div>
-      </div>`;
-  });
-});
+  renderLore();
 </script>
 
 </body>
-</html>
