@@ -21,16 +21,20 @@ html, body {
   overflow: hidden;
 }
 
-/* ---------------- BACKGROUND HUD ---------------- */
+/* ---------------- HOLOGRAPHIC BACKGROUND ---------------- */
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  inset: -20%;
   background:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  opacity: 0.15;
+    radial-gradient(circle at center, rgba(155,92,255,0.18), transparent 60%),
+    repeating-conic-gradient(
+      from 0deg,
+      rgba(255,255,255,0.03) 0deg 6deg,
+      transparent 6deg 12deg
+    );
+  animation: holoSpin 60s linear infinite;
+  opacity: 0.25;
   pointer-events: none;
 }
 
@@ -38,15 +42,17 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.03),
-    rgba(255,255,255,0.03) 1px,
-    transparent 2px,
-    transparent 4px
-  );
-  opacity: 0.05;
+  background:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: 0.12;
   pointer-events: none;
+}
+
+@keyframes holoSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 /* ---------------- LAYOUT ---------------- */
@@ -59,6 +65,37 @@ body::after {
   text-align: center;
   gap: 1.4rem;
   padding: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------------- HUD RINGS ---------------- */
+.hud {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 1px dashed rgba(155,92,255,0.35);
+  animation: hudRotate 24s linear infinite;
+}
+
+.hud::before,
+.hud::after {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.hud::after {
+  inset: 28px;
+  border-color: rgba(155,92,255,0.25);
+}
+
+@keyframes hudRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
 }
 
 /* ---------------- COIN ---------------- */
@@ -66,6 +103,7 @@ body::after {
   width: 140px;
   height: 140px;
   perspective: 1000px;
+  position: relative;
 }
 
 .coin {
@@ -75,12 +113,14 @@ body::after {
   background:
     radial-gradient(circle at 30% 30%, #fff4c4, #d4af37 40%, #8a6b1f 70%);
   box-shadow:
-    0 0 30px rgba(255,215,0,0.6),
-    inset 0 0 20px rgba(0,0,0,0.5);
+    0 0 45px rgba(255,215,0,0.65),
+    inset 0 0 22px rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: spin 14s linear infinite;
+  animation: spin 14s linear infinite, pulse 4s ease-in-out infinite;
+  position: relative;
+  z-index: 3;
 }
 
 .coin span {
@@ -92,6 +132,11 @@ body::after {
 @keyframes spin {
   from { transform: rotateY(0deg); }
   to   { transform: rotateY(360deg); }
+}
+
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 45px rgba(255,215,0,0.55); }
+  50%     { box-shadow: 0 0 65px rgba(155,92,255,0.9); }
 }
 
 /* ---------------- TITLE ---------------- */
@@ -116,9 +161,10 @@ h1 {
 .countdown div {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 10px;
-  padding: 0.6rem 0.8rem;
+  border-radius: 12px;
+  padding: 0.6rem 0.9rem;
   min-width: 64px;
+  backdrop-filter: blur(6px);
 }
 
 .countdown span {
@@ -136,25 +182,26 @@ h1 {
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  margin-top: 1.4rem;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .btn {
-  padding: 0.65rem 1.6rem;
+  padding: 0.7rem 1.7rem;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.07);
   color: white;
   cursor: pointer;
   font-size: 0.85rem;
   letter-spacing: 0.04rem;
-  transition: transform 0.2s ease, background 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .btn:hover {
-  transform: translateY(-2px);
-  background: rgba(155,92,255,0.2);
+  transform: translateY(-3px);
+  background: rgba(155,92,255,0.28);
+  box-shadow: 0 0 18px rgba(155,92,255,0.55);
 }
 
 /* ---------------- FOOTER ---------------- */
@@ -171,7 +218,7 @@ h1 {
   position: absolute;
   width: 2px;
   height: 2px;
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.45);
   animation: drift linear infinite;
 }
 
@@ -180,33 +227,12 @@ h1 {
   to   { transform: translateY(-10vh); }
 }
 
-/* ---------------- MOBILE FIX ---------------- */
+/* ---------------- MOBILE ---------------- */
 @media (max-width: 600px) {
-  .coin-wrapper {
-    width: 110px;
-    height: 110px;
-  }
-
-  h1 {
-    font-size: 1.8rem;
-  }
-
-  .tagline {
-    font-size: 0.85rem;
-  }
-
-  .countdown div {
-    min-width: 56px;
-    padding: 0.45rem 0.6rem;
-  }
-
-  .countdown span {
-    font-size: 1.05rem;
-  }
-
-  .btn {
-    font-size: 0.8rem;
-  }
+  .coin-wrapper { width: 110px; height: 110px; }
+  .hud { width: 200px; height: 200px; }
+  h1 { font-size: 1.75rem; }
+  .tagline { font-size: 0.85rem; }
 }
 </style>
 </head>
@@ -214,6 +240,8 @@ h1 {
 <body>
 
 <div class="container">
+
+  <div class="hud"></div>
 
   <div class="coin-wrapper">
     <div class="coin"><span>H</span></div>
@@ -250,24 +278,23 @@ h1 {
 const launch = new Date("February 12, 2026 18:00:00 GMT-0500").getTime();
 
 setInterval(() => {
-  const now = new Date().getTime();
+  const now = Date.now();
   const diff = launch - now;
-
   if (diff <= 0) return;
 
-  document.getElementById("days").textContent = Math.floor(diff / (1000*60*60*24));
-  document.getElementById("hours").textContent = Math.floor((diff / (1000*60*60)) % 24);
-  document.getElementById("minutes").textContent = Math.floor((diff / (1000*60)) % 60);
-  document.getElementById("seconds").textContent = Math.floor((diff / 1000) % 60);
+  days.textContent = Math.floor(diff / 86400000);
+  hours.textContent = Math.floor(diff / 3600000) % 24;
+  minutes.textContent = Math.floor(diff / 60000) % 60;
+  seconds.textContent = Math.floor(diff / 1000) % 60;
 }, 1000);
 
 /* PARTICLES */
-for (let i = 0; i < 35; i++) {
+for (let i = 0; i < 40; i++) {
   const p = document.createElement("div");
   p.className = "particle";
   p.style.left = Math.random() * 100 + "vw";
-  p.style.animationDuration = (10 + Math.random() * 10) + "s";
-  p.style.opacity = Math.random() * 0.5;
+  p.style.animationDuration = (10 + Math.random() * 12) + "s";
+  p.style.opacity = Math.random() * 0.6;
   document.body.appendChild(p);
 }
 </script>
