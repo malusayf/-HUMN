@@ -6,7 +6,6 @@
 <title>$HUMN — Human Coin</title>
 
 <style>
-/* ---------------- RESET ---------------- */
 * {
   margin: 0;
   padding: 0;
@@ -21,7 +20,7 @@ html, body {
   overflow: hidden;
 }
 
-/* ---------------- HOLOGRAPHIC BACKGROUND ---------------- */
+/* ---------- BACKGROUND ---------- */
 body::before {
   content: "";
   position: fixed;
@@ -33,29 +32,16 @@ body::before {
       rgba(255,255,255,0.03) 0deg 6deg,
       transparent 6deg 12deg
     );
-  animation: holoSpin 60s linear infinite;
+  animation: spinBg 60s linear infinite;
   opacity: 0.25;
   pointer-events: none;
 }
 
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 42px 42px;
-  opacity: 0.12;
-  pointer-events: none;
+@keyframes spinBg {
+  to { transform: rotate(360deg); }
 }
 
-@keyframes holoSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* ---------------- LAYOUT ---------------- */
+/* ---------- LAYOUT ---------- */
 .container {
   height: 100%;
   display: flex;
@@ -69,7 +55,7 @@ body::after {
   z-index: 2;
 }
 
-/* ---------------- HUD RINGS ---------------- */
+/* ---------- HUD RING ---------- */
 .hud {
   position: absolute;
   width: 260px;
@@ -79,26 +65,11 @@ body::after {
   animation: hudRotate 24s linear infinite;
 }
 
-.hud::before,
-.hud::after {
-  content: "";
-  position: absolute;
-  inset: 14px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.12);
-}
-
-.hud::after {
-  inset: 28px;
-  border-color: rgba(155,92,255,0.25);
-}
-
 @keyframes hudRotate {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(-360deg); }
+  to { transform: rotate(-360deg); }
 }
 
-/* ---------------- COIN ---------------- */
+/* ---------- COIN ---------- */
 .coin-wrapper {
   width: 140px;
   height: 140px;
@@ -120,26 +91,55 @@ body::after {
   justify-content: center;
   animation: spin 14s linear infinite, pulse 4s ease-in-out infinite;
   position: relative;
-  z-index: 3;
-}
-
-.coin span {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #2a1d00;
 }
 
 @keyframes spin {
-  from { transform: rotateY(0deg); }
-  to   { transform: rotateY(360deg); }
+  to { transform: rotateY(360deg); }
 }
 
 @keyframes pulse {
-  0%,100% { box-shadow: 0 0 45px rgba(255,215,0,0.55); }
-  50%     { box-shadow: 0 0 65px rgba(155,92,255,0.9); }
+  50% { box-shadow: 0 0 70px rgba(155,92,255,0.9); }
 }
 
-/* ---------------- TITLE ---------------- */
+/* ---------- STICK FIGURE ---------- */
+.human {
+  position: relative;
+  width: 34px;
+  height: 54px;
+  filter: drop-shadow(0 1px 1px rgba(255,255,255,0.6));
+}
+
+/* head */
+.human::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background: #2a1d00;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+/* body + limbs */
+.human::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 2px;
+  height: 40px;
+  background: #2a1d00;
+  transform: translateX(-50%);
+  box-shadow:
+    -12px 10px 0 0 #2a1d00, /* left arm */
+     12px 10px 0 0 #2a1d00, /* right arm */
+    -8px 32px 0 0 #2a1d00, /* left leg */
+     8px 32px 0 0 #2a1d00; /* right leg */
+}
+
+/* ---------- TEXT ---------- */
 h1 {
   font-size: clamp(2rem, 5vw, 3rem);
   letter-spacing: 0.22rem;
@@ -151,11 +151,10 @@ h1 {
   line-height: 1.6;
 }
 
-/* ---------------- COUNTDOWN ---------------- */
+/* ---------- COUNTDOWN ---------- */
 .countdown {
   display: flex;
   gap: 0.8rem;
-  margin-top: 0.8rem;
 }
 
 .countdown div {
@@ -164,13 +163,11 @@ h1 {
   border-radius: 12px;
   padding: 0.6rem 0.9rem;
   min-width: 64px;
-  backdrop-filter: blur(6px);
 }
 
 .countdown span {
   font-size: 1.2rem;
   font-weight: 600;
-  display: block;
 }
 
 .countdown label {
@@ -178,7 +175,7 @@ h1 {
   opacity: 0.6;
 }
 
-/* ---------------- BUTTONS ---------------- */
+/* ---------- BUTTONS ---------- */
 .buttons {
   display: flex;
   flex-direction: column;
@@ -194,7 +191,6 @@ h1 {
   color: white;
   cursor: pointer;
   font-size: 0.85rem;
-  letter-spacing: 0.04rem;
   transition: all 0.25s ease;
 }
 
@@ -204,35 +200,19 @@ h1 {
   box-shadow: 0 0 18px rgba(155,92,255,0.55);
 }
 
-/* ---------------- FOOTER ---------------- */
+/* ---------- FOOTER ---------- */
 .footer {
   position: absolute;
   bottom: 1rem;
   font-size: 0.65rem;
   opacity: 0.4;
-  letter-spacing: 0.08rem;
 }
 
-/* ---------------- PARTICLES ---------------- */
-.particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: rgba(255,255,255,0.45);
-  animation: drift linear infinite;
-}
-
-@keyframes drift {
-  from { transform: translateY(110vh); }
-  to   { transform: translateY(-10vh); }
-}
-
-/* ---------------- MOBILE ---------------- */
+/* ---------- MOBILE ---------- */
 @media (max-width: 600px) {
   .coin-wrapper { width: 110px; height: 110px; }
   .hud { width: 200px; height: 200px; }
   h1 { font-size: 1.75rem; }
-  .tagline { font-size: 0.85rem; }
 }
 </style>
 </head>
@@ -244,15 +224,16 @@ h1 {
   <div class="hud"></div>
 
   <div class="coin-wrapper">
-    <div class="coin"><span>H</span></div>
+    <div class="coin">
+      <div class="human"></div>
+    </div>
   </div>
 
   <h1>WELCOME TO $HUMN</h1>
 
   <div class="tagline">
     Every candle is a human.<br>
-    Buy together. Stay together. Win together.<br><br>
-    Every season is $HUMN season.
+    Buy together. Stay together. Win together.
   </div>
 
   <div class="countdown">
@@ -264,7 +245,6 @@ h1 {
 
   <div class="buttons">
     <button class="btn" onclick="location.href='human-lore.html'">Human Lore</button>
-    <button class="btn" onclick="location.href='human-paper.html'">Read the Human Paper</button>
     <button class="btn" onclick="window.open('https://t.me/HUMNtalk','_blank')">Community Telegram</button>
     <button class="btn" onclick="window.open('https://x.com/knightshadeops?s=21','_blank')">Follow on X</button>
   </div>
@@ -274,29 +254,15 @@ h1 {
 <div class="footer">$HUMN — Human Layer Protocol</div>
 
 <script>
-/* COUNTDOWN (EST) */
 const launch = new Date("February 12, 2026 18:00:00 GMT-0500").getTime();
-
 setInterval(() => {
-  const now = Date.now();
-  const diff = launch - now;
-  if (diff <= 0) return;
-
-  days.textContent = Math.floor(diff / 86400000);
-  hours.textContent = Math.floor(diff / 3600000) % 24;
-  minutes.textContent = Math.floor(diff / 60000) % 60;
-  seconds.textContent = Math.floor(diff / 1000) % 60;
+  const d = launch - Date.now();
+  if (d <= 0) return;
+  days.textContent = Math.floor(d / 86400000);
+  hours.textContent = Math.floor(d / 3600000) % 24;
+  minutes.textContent = Math.floor(d / 60000) % 60;
+  seconds.textContent = Math.floor(d / 1000) % 60;
 }, 1000);
-
-/* PARTICLES */
-for (let i = 0; i < 40; i++) {
-  const p = document.createElement("div");
-  p.className = "particle";
-  p.style.left = Math.random() * 100 + "vw";
-  p.style.animationDuration = (10 + Math.random() * 12) + "s";
-  p.style.opacity = Math.random() * 0.6;
-  document.body.appendChild(p);
-}
 </script>
 
 </body>
