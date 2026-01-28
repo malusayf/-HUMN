@@ -20,7 +20,7 @@ html, body {
   overflow: hidden;
 }
 
-/* ---------- BACKGROUND ---------- */
+/* ---------- BACKGROUND (NON-INTERACTIVE) ---------- */
 body::before {
   content: "";
   position: fixed;
@@ -32,6 +32,8 @@ body::before {
       transparent 6deg 12deg
     );
   animation: bgSpin 80s linear infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
 @keyframes bgSpin {
@@ -40,6 +42,7 @@ body::before {
 
 /* ---------- LAYOUT ---------- */
 .container {
+  position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -59,6 +62,7 @@ body::before {
   border-radius: 50%;
   border: 1px dashed rgba(155,92,255,0.35);
   animation: hudRotate 28s linear infinite;
+  pointer-events: none;
 }
 
 @keyframes hudRotate {
@@ -123,7 +127,7 @@ body::before {
   transform: translateX(-50%);
 }
 
-/* ---------- TITLE (TYPING) ---------- */
+/* ---------- TITLE ---------- */
 h1 {
   font-size: clamp(1.8rem, 5vw, 3rem);
   letter-spacing: 0.18rem;
@@ -173,7 +177,7 @@ h1 {
   opacity: 0.6;
 }
 
-/* ---------- BUTTONS ---------- */
+/* ---------- BUTTONS (CLICKABLE) ---------- */
 .buttons {
   display: flex;
   flex-direction: column;
@@ -203,6 +207,7 @@ h1 {
   bottom: 1rem;
   font-size: 0.65rem;
   opacity: 0.4;
+  pointer-events: none;
 }
 
 /* ---------- MOBILE ---------- */
@@ -251,18 +256,18 @@ h1 {
 <div class="footer">$HUMN — Human Layer Protocol</div>
 
 <script>
-/* ---------- TYPE ONCE, STAY FOREVER ---------- */
+/* ---------- TYPE ONCE ---------- */
 const text = "WELCOME $HUMN";
 const el = document.getElementById("talk");
-let index = 0;
+let i = 0;
 
 function typeOnce() {
-  if (index <= text.length) {
-    el.innerHTML = text.slice(0, index) + '<span class="cursor"></span>';
-    index++;
+  if (i <= text.length) {
+    el.innerHTML = text.slice(0, i) + '<span class="cursor"></span>';
+    i++;
     setTimeout(typeOnce, 90);
   } else {
-    el.textContent = text; // lock text permanently
+    el.textContent = text;
   }
 }
 typeOnce();
