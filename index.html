@@ -26,13 +26,12 @@ body::before {
   position: fixed;
   inset: -30%;
   background:
-    radial-gradient(circle, rgba(155,92,255,0.15), transparent 60%),
+    radial-gradient(circle, rgba(155,92,255,0.12), transparent 60%),
     repeating-conic-gradient(
-      rgba(255,255,255,0.04) 0deg 6deg,
+      rgba(255,255,255,0.03) 0deg 6deg,
       transparent 6deg 12deg
     );
-  animation: bgSpin 70s linear infinite;
-  opacity: 0.25;
+  animation: bgSpin 80s linear infinite;
 }
 
 @keyframes bgSpin {
@@ -59,7 +58,7 @@ body::before {
   height: 260px;
   border-radius: 50%;
   border: 1px dashed rgba(155,92,255,0.35);
-  animation: hudRotate 26s linear infinite;
+  animation: hudRotate 28s linear infinite;
 }
 
 @keyframes hudRotate {
@@ -103,7 +102,6 @@ body::before {
   height: 44px;
 }
 
-/* hood shape */
 .hood::before {
   content: "";
   position: absolute;
@@ -113,7 +111,6 @@ body::before {
   clip-path: polygon(50% 0%, 90% 25%, 100% 70%, 50% 100%, 0% 70%, 10% 25%);
 }
 
-/* face shadow */
 .hood::after {
   content: "";
   position: absolute;
@@ -126,7 +123,7 @@ body::before {
   transform: translateX(-50%);
 }
 
-/* ---------- TALKING TEXT ---------- */
+/* ---------- TITLE (TYPING) ---------- */
 h1 {
   font-size: clamp(1.8rem, 5vw, 3rem);
   letter-spacing: 0.18rem;
@@ -145,6 +142,7 @@ h1 {
   50% { opacity: 0; }
 }
 
+/* ---------- TAGLINE ---------- */
 .tagline {
   opacity: 0.85;
   font-size: 0.95rem;
@@ -243,6 +241,7 @@ h1 {
 
   <div class="buttons">
     <button class="btn" onclick="location.href='human-lore.html'">Human Lore</button>
+    <button class="btn" onclick="location.href='human-paper.html'">Read the Human Paper</button>
     <button class="btn" onclick="window.open('https://t.me/HUMNtalk','_blank')">Community Telegram</button>
     <button class="btn" onclick="window.open('https://x.com/knightshadeops?s=21','_blank')">Follow on X</button>
   </div>
@@ -252,26 +251,21 @@ h1 {
 <div class="footer">$HUMN — Human Layer Protocol</div>
 
 <script>
-/* ---------- TALKING TEXT ---------- */
-const lines = [
-  "Welcome.",
-  "Welcome, $HUMN.",
-  "You are early."
-];
-
-let i = 0, j = 0;
+/* ---------- TYPE ONCE, STAY FOREVER ---------- */
+const text = "WELCOME $HUMN";
 const el = document.getElementById("talk");
+let index = 0;
 
-function type() {
-  if (i >= lines.length) return;
-  el.innerHTML = lines[i].slice(0, j) + '<span class="cursor"></span>';
-  j++;
-  if (j > lines[i].length) {
-    setTimeout(() => { i++; j = 0; }, 900);
+function typeOnce() {
+  if (index <= text.length) {
+    el.innerHTML = text.slice(0, index) + '<span class="cursor"></span>';
+    index++;
+    setTimeout(typeOnce, 90);
+  } else {
+    el.textContent = text; // lock text permanently
   }
-  setTimeout(type, 90);
 }
-type();
+typeOnce();
 
 /* ---------- COUNTDOWN (EST) ---------- */
 const launch = new Date("February 12, 2026 18:00:00 GMT-0500").getTime();
