@@ -24,20 +24,18 @@ html, body {
 body::before {
   content: "";
   position: fixed;
-  inset: -20%;
+  inset: -30%;
   background:
-    radial-gradient(circle at center, rgba(155,92,255,0.18), transparent 60%),
+    radial-gradient(circle, rgba(155,92,255,0.15), transparent 60%),
     repeating-conic-gradient(
-      from 0deg,
-      rgba(255,255,255,0.03) 0deg 6deg,
+      rgba(255,255,255,0.04) 0deg 6deg,
       transparent 6deg 12deg
     );
-  animation: spinBg 60s linear infinite;
+  animation: bgSpin 70s linear infinite;
   opacity: 0.25;
-  pointer-events: none;
 }
 
-@keyframes spinBg {
+@keyframes bgSpin {
   to { transform: rotate(360deg); }
 }
 
@@ -51,7 +49,6 @@ body::before {
   text-align: center;
   gap: 1.4rem;
   padding: 2rem;
-  position: relative;
   z-index: 2;
 }
 
@@ -62,7 +59,7 @@ body::before {
   height: 260px;
   border-radius: 50%;
   border: 1px dashed rgba(155,92,255,0.35);
-  animation: hudRotate 24s linear infinite;
+  animation: hudRotate 26s linear infinite;
 }
 
 @keyframes hudRotate {
@@ -74,7 +71,6 @@ body::before {
   width: 140px;
   height: 140px;
   perspective: 1000px;
-  position: relative;
 }
 
 .coin {
@@ -84,13 +80,12 @@ body::before {
   background:
     radial-gradient(circle at 30% 30%, #fff4c4, #d4af37 40%, #8a6b1f 70%);
   box-shadow:
-    0 0 45px rgba(255,215,0,0.65),
+    0 0 45px rgba(255,215,0,0.6),
     inset 0 0 22px rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   animation: spin 14s linear infinite, pulse 4s ease-in-out infinite;
-  position: relative;
 }
 
 @keyframes spin {
@@ -98,51 +93,56 @@ body::before {
 }
 
 @keyframes pulse {
-  50% { box-shadow: 0 0 70px rgba(155,92,255,0.9); }
+  50% { box-shadow: 0 0 70px rgba(155,92,255,0.85); }
 }
 
-/* ---------- STICK FIGURE ---------- */
-.human {
+/* ---------- HOODED HUMAN ---------- */
+.hood {
   position: relative;
-  width: 34px;
-  height: 54px;
-  filter: drop-shadow(0 1px 1px rgba(255,255,255,0.6));
+  width: 36px;
+  height: 44px;
 }
 
-/* head */
-.human::before {
+/* hood shape */
+.hood::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 50%;
-  width: 14px;
-  height: 14px;
+  inset: 0;
   background: #2a1d00;
+  border-radius: 50% 50% 45% 45%;
+  clip-path: polygon(50% 0%, 90% 25%, 100% 70%, 50% 100%, 0% 70%, 10% 25%);
+}
+
+/* face shadow */
+.hood::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: 18px;
+  height: 20px;
+  background: radial-gradient(circle, rgba(0,0,0,0.9), rgba(0,0,0,1));
   border-radius: 50%;
   transform: translateX(-50%);
 }
 
-/* body + limbs */
-.human::after {
-  content: "";
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  width: 2px;
-  height: 40px;
-  background: #2a1d00;
-  transform: translateX(-50%);
-  box-shadow:
-    -12px 10px 0 0 #2a1d00, /* left arm */
-     12px 10px 0 0 #2a1d00, /* right arm */
-    -8px 32px 0 0 #2a1d00, /* left leg */
-     8px 32px 0 0 #2a1d00; /* right leg */
+/* ---------- TALKING TEXT ---------- */
+h1 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  letter-spacing: 0.18rem;
+  min-height: 3.2rem;
 }
 
-/* ---------- TEXT ---------- */
-h1 {
-  font-size: clamp(2rem, 5vw, 3rem);
-  letter-spacing: 0.22rem;
+.cursor {
+  display: inline-block;
+  width: 10px;
+  background: rgba(155,92,255,0.8);
+  margin-left: 4px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
 }
 
 .tagline {
@@ -190,13 +190,12 @@ h1 {
   background: rgba(255,255,255,0.07);
   color: white;
   cursor: pointer;
-  font-size: 0.85rem;
   transition: all 0.25s ease;
 }
 
 .btn:hover {
   transform: translateY(-3px);
-  background: rgba(155,92,255,0.28);
+  background: rgba(155,92,255,0.3);
   box-shadow: 0 0 18px rgba(155,92,255,0.55);
 }
 
@@ -212,7 +211,6 @@ h1 {
 @media (max-width: 600px) {
   .coin-wrapper { width: 110px; height: 110px; }
   .hud { width: 200px; height: 200px; }
-  h1 { font-size: 1.75rem; }
 }
 </style>
 </head>
@@ -225,11 +223,11 @@ h1 {
 
   <div class="coin-wrapper">
     <div class="coin">
-      <div class="human"></div>
+      <div class="hood"></div>
     </div>
   </div>
 
-  <h1>WELCOME TO $HUMN</h1>
+  <h1 id="talk"></h1>
 
   <div class="tagline">
     Every candle is a human.<br>
@@ -254,6 +252,28 @@ h1 {
 <div class="footer">$HUMN — Human Layer Protocol</div>
 
 <script>
+/* ---------- TALKING TEXT ---------- */
+const lines = [
+  "Welcome.",
+  "Welcome, $HUMN.",
+  "You are early."
+];
+
+let i = 0, j = 0;
+const el = document.getElementById("talk");
+
+function type() {
+  if (i >= lines.length) return;
+  el.innerHTML = lines[i].slice(0, j) + '<span class="cursor"></span>';
+  j++;
+  if (j > lines[i].length) {
+    setTimeout(() => { i++; j = 0; }, 900);
+  }
+  setTimeout(type, 90);
+}
+type();
+
+/* ---------- COUNTDOWN (EST) ---------- */
 const launch = new Date("February 12, 2026 18:00:00 GMT-0500").getTime();
 setInterval(() => {
   const d = launch - Date.now();
