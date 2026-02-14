@@ -20,7 +20,7 @@ html, body {
   overflow: hidden;
 }
 
-/* ---------- BACKGROUND (NON-INTERACTIVE) ---------- */
+/* ---------- BACKGROUND ---------- */
 body::before {
   content: "";
   position: fixed;
@@ -33,14 +33,10 @@ body::before {
     );
   animation: bgSpin 80s linear infinite;
   pointer-events: none;
-  z-index: 0;
 }
 
-@keyframes bgSpin {
-  to { transform: rotate(360deg); }
-}
+@keyframes bgSpin { to { transform: rotate(360deg); } }
 
-/* ---------- LAYOUT ---------- */
 .container {
   position: relative;
   height: 100%;
@@ -54,7 +50,7 @@ body::before {
   z-index: 2;
 }
 
-/* ---------- HUD RING ---------- */
+/* HUD */
 .hud {
   position: absolute;
   width: 260px;
@@ -62,158 +58,46 @@ body::before {
   border-radius: 50%;
   border: 1px dashed rgba(155,92,255,0.35);
   animation: hudRotate 28s linear infinite;
-  pointer-events: none;
 }
 
-@keyframes hudRotate {
-  to { transform: rotate(-360deg); }
-}
+@keyframes hudRotate { to { transform: rotate(-360deg); } }
 
-/* ---------- COIN ---------- */
-.coin-wrapper {
-  width: 140px;
-  height: 140px;
-  perspective: 1000px;
-}
-
+/* COIN */
+.coin-wrapper { width:140px;height:140px;perspective:1000px;}
 .coin {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 30% 30%, #fff4c4, #d4af37 40%, #8a6b1f 70%);
-  box-shadow:
-    0 0 45px rgba(255,215,0,0.6),
-    inset 0 0 22px rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: spin 14s linear infinite, pulse 4s ease-in-out infinite;
+  width:100%;height:100%;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #fff4c4,#d4af37 40%,#8a6b1f 70%);
+  box-shadow:0 0 45px rgba(255,215,0,.6), inset 0 0 22px rgba(0,0,0,.6);
+  display:flex;align-items:center;justify-content:center;
+  animation:spin 14s linear infinite,pulse 4s ease-in-out infinite;
 }
+@keyframes spin {to{transform:rotateY(360deg)}}
+@keyframes pulse {50%{box-shadow:0 0 70px rgba(155,92,255,.85)}}
 
-@keyframes spin {
-  to { transform: rotateY(360deg); }
-}
+.hood{width:36px;height:44px;position:relative;}
+.hood::before{content:"";position:absolute;inset:0;background:#2a1d00;border-radius:50%;clip-path:polygon(50% 0%,90% 25%,100% 70%,50% 100%,0% 70%,10% 25%);}
+.hood::after{content:"";position:absolute;top:12px;left:50%;width:18px;height:20px;background:black;border-radius:50%;transform:translateX(-50%);}
 
-@keyframes pulse {
-  50% { box-shadow: 0 0 70px rgba(155,92,255,0.85); }
-}
+h1{font-size:clamp(1.8rem,5vw,3rem);letter-spacing:.18rem;}
+.cursor{display:inline-block;width:10px;background:rgba(155,92,255,.8);margin-left:4px;animation:blink 1s infinite;}
+@keyframes blink{50%{opacity:0}}
 
-/* ---------- HOODED HUMAN ---------- */
-.hood {
-  position: relative;
-  width: 36px;
-  height: 44px;
-}
+.tagline{opacity:.85;font-size:.95rem;line-height:1.6}
 
-.hood::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #2a1d00;
-  border-radius: 50% 50% 45% 45%;
-  clip-path: polygon(50% 0%, 90% 25%, 100% 70%, 50% 100%, 0% 70%, 10% 25%);
-}
+.countdown{display:flex;gap:.8rem}
+.countdown div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:.6rem .9rem;min-width:64px}
+.countdown span{font-size:1.2rem;font-weight:600}
+.countdown label{font-size:.65rem;opacity:.6}
 
-.hood::after {
-  content: "";
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  width: 18px;
-  height: 20px;
-  background: radial-gradient(circle, rgba(0,0,0,0.9), rgba(0,0,0,1));
-  border-radius: 50%;
-  transform: translateX(-50%);
-}
+.buttons{display:flex;flex-direction:column;gap:.75rem;margin-top:1.5rem}
+.btn{padding:.7rem 1.7rem;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.07);color:white;cursor:pointer}
+.btn:hover{transform:translateY(-3px);background:rgba(155,92,255,.3);box-shadow:0 0 18px rgba(155,92,255,.55)}
 
-/* ---------- TITLE ---------- */
-h1 {
-  font-size: clamp(1.8rem, 5vw, 3rem);
-  letter-spacing: 0.18rem;
-  min-height: 3.2rem;
-}
+.footer{position:absolute;bottom:1rem;font-size:.65rem;opacity:.4}
 
-.cursor {
-  display: inline-block;
-  width: 10px;
-  background: rgba(155,92,255,0.8);
-  margin-left: 4px;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-/* ---------- TAGLINE ---------- */
-.tagline {
-  opacity: 0.85;
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-/* ---------- COUNTDOWN ---------- */
-.countdown {
-  display: flex;
-  gap: 0.8rem;
-}
-
-.countdown div {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 12px;
-  padding: 0.6rem 0.9rem;
-  min-width: 64px;
-}
-
-.countdown span {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.countdown label {
-  font-size: 0.65rem;
-  opacity: 0.6;
-}
-
-/* ---------- BUTTONS (CLICKABLE) ---------- */
-.buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-}
-
-.btn {
-  padding: 0.7rem 1.7rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.22);
-  background: rgba(255,255,255,0.07);
-  color: white;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.btn:hover {
-  transform: translateY(-3px);
-  background: rgba(155,92,255,0.3);
-  box-shadow: 0 0 18px rgba(155,92,255,0.55);
-}
-
-/* ---------- FOOTER ---------- */
-.footer {
-  position: absolute;
-  bottom: 1rem;
-  font-size: 0.65rem;
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-/* ---------- MOBILE ---------- */
-@media (max-width: 600px) {
-  .coin-wrapper { width: 110px; height: 110px; }
-  .hud { width: 200px; height: 200px; }
+@media(max-width:600px){
+.coin-wrapper{width:110px;height:110px}
+.hud{width:200px;height:200px}
 }
 </style>
 </head>
@@ -221,67 +105,51 @@ h1 {
 <body>
 
 <div class="container">
+<div class="hud"></div>
 
-  <div class="hud"></div>
+<div class="coin-wrapper"><div class="coin"><div class="hood"></div></div></div>
 
-  <div class="coin-wrapper">
-    <div class="coin">
-      <div class="hood"></div>
-    </div>
-  </div>
+<h1 id="talk"></h1>
 
-  <h1 id="talk"></h1>
+<div class="tagline">
+Every candle is a human.<br>
+Buy together. Stay together. Win together.
+</div>
 
-  <div class="tagline">
-    Every candle is a human.<br>
-    Buy together. Stay together. Win together.
-  </div>
+<div class="countdown">
+<div><span id="days">--</span><label>DAYS</label></div>
+<div><span id="hours">--</span><label>HRS</label></div>
+<div><span id="minutes">--</span><label>MIN</label></div>
+<div><span id="seconds">--</span><label>SEC</label></div>
+</div>
 
-  <div class="countdown">
-    <div><span id="days">--</span><label>DAYS</label></div>
-    <div><span id="hours">--</span><label>HRS</label></div>
-    <div><span id="minutes">--</span><label>MIN</label></div>
-    <div><span id="seconds">--</span><label>SEC</label></div>
-  </div>
-
-  <div class="buttons">
-    <button class="btn" onclick="location.href='human-lore.html'">Human Lore</button>
-    <button class="btn" onclick="location.href='human-paper.html'">Read the Human Paper</button>
-    <button class="btn" onclick="window.open('https://t.me/HUMNtalk','_blank')">Community Telegram</button>
-    <button class="btn" onclick="window.open('https://x.com/knightshadeops?s=21','_blank')">Follow on X</button>
-  </div>
+<div class="buttons">
+<button class="btn" onclick="location.href='human-lore.html'">Human Lore</button>
+<button class="btn" onclick="location.href='human-paper.html'">Read the Human Paper</button>
+<button class="btn" onclick="window.open('https://t.me/HUMNtalk','_blank')">Community Telegram</button>
+<button class="btn" onclick="window.open('https://x.com/knightshadeops?s=21','_blank')">Follow on X</button>
+</div>
 
 </div>
 
 <div class="footer">$HUMN — Human Layer Protocol</div>
 
 <script>
-/* ---------- TYPE ONCE ---------- */
-const text = "WELCOME $HUMN";
-const el = document.getElementById("talk");
-let i = 0;
+const text="WELCOME $HUMN";
+const el=document.getElementById("talk");let i=0;
+(function type(){if(i<=text.length){el.innerHTML=text.slice(0,i)+'<span class="cursor"></span>';i++;setTimeout(type,90)}else el.textContent=text})();
 
-function typeOnce() {
-  if (i <= text.length) {
-    el.innerHTML = text.slice(0, i) + '<span class="cursor"></span>';
-    i++;
-    setTimeout(typeOnce, 90);
-  } else {
-    el.textContent = text;
-  }
-}
-typeOnce();
+/* UPDATED DATE */
+const launch=new Date("February 28, 2026 18:00:00 GMT-0500").getTime();
 
-/* ---------- COUNTDOWN (EST) ---------- */
-const launch = new Date("February 12, 2026 18:00:00 GMT-0500").getTime();
-setInterval(() => {
-  const d = launch - Date.now();
-  if (d <= 0) return;
-  days.textContent = Math.floor(d / 86400000);
-  hours.textContent = Math.floor(d / 3600000) % 24;
-  minutes.textContent = Math.floor(d / 60000) % 60;
-  seconds.textContent = Math.floor(d / 1000) % 60;
-}, 1000);
+setInterval(()=>{
+const d=launch-Date.now();
+if(d<=0)return;
+days.textContent=Math.floor(d/86400000);
+hours.textContent=Math.floor(d/3600000)%24;
+minutes.textContent=Math.floor(d/60000)%60;
+seconds.textContent=Math.floor(d/1000)%60;
+},1000);
 </script>
 
 </body>
